@@ -71,6 +71,7 @@ struct gameState {
   int discardCount[MAX_PLAYERS];
   int playedCards[MAX_DECK];
   int playedCardCount;
+
 };
 
 /* All functions return -1 on failure, and DO NOT CHANGE GAME STATE;
@@ -128,4 +129,9 @@ int getWinners(int players[MAX_PLAYERS], struct gameState *state);
 /* Set array position of each player who won (remember ties!) to
    1, others to 0 */
 
+void testSmithy(int, struct gameState *, int);
+void testAdventurer(int, struct gameState *);
+void testCutpurse(int, struct gameState *, int);
+void testCouncilRoom(int, struct gameState *, int);
+void testGreatHall(int, struct gameState *, int);
 #endif
