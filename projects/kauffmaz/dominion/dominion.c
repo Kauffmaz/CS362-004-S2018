@@ -1379,7 +1379,7 @@ int updateCoins(int player, struct gameState *state, int bonus)
 
 void testSmithy(int player, struct gameState *argState, int argHandPos)
 {
-  //+3 Cards
+  //+3 Cards  //BUG: PLAYER WILL NOW DRAW 4 CARDS
   int i = 0;
   for (i = 0; i < 4; i++)
   {
@@ -1396,7 +1396,8 @@ void testAdventurer(int player, struct gameState *argState)
   int drawntreasure = 0;
   int temphand[MAX_HAND];
   int z = 0;
-  while (drawntreasure < 2)
+  //BUG: PLAYER WILL DRAW 3 TREASURES INSTEAD OF 2
+  while (drawntreasure < 3)
   {
     if (argState->deckCount[player] < 1)
     { //if the deck is empty we need to shuffle discard and add to deck
@@ -1465,7 +1466,7 @@ void testCouncilRoom(int player, struct gameState *argState, int handPos)
   //+1 Buy
   argState->numBuys++;
 
-  //Each other player draws a card
+  //Each other player draws a card  BUG: EACH OTHER PLAYER DRAWS 2 CARDS
   for (i = 0; i < argState->numPlayers; i++)
   {
     if (i != player)
@@ -1486,7 +1487,7 @@ void testGreatHall(int player, struct gameState *argState, int handPos)
   //+1 Card
   drawCard(player, argState);
 
-  //+1 Actions
+  //+1 Actions  BUG: PLAYER WILL RECIEVE 2 ACTIONS
   argState->numActions += 2;
 
   //discard card from hand
