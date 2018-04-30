@@ -1423,7 +1423,6 @@ void testAdventurer(int player, struct gameState *argState)
 
 void testCutpurse(int player, struct gameState *argState, int handPos)
 {
-  printf("testing cutpurse");
   int i, k, j;
   updateCoins(player, argState, 2);
   for (i = 0; i < argState->numPlayers; i++)
