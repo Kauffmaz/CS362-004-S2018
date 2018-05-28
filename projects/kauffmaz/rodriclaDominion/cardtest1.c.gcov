@@ -1,0 +1,146 @@
+        -:    0:Source:cardtest1.c
+        -:    0:Graph:cardtest1.gcno
+        -:    0:Data:cardtest1.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include "assert.h"
+        -:    4:#include "dominion.h"
+        -:    5:#include "dominion_helpers.h"
+        -:    6:#include "rngs.h"
+        -:    7:
+        -:    8:int testAssert(int, int);
+        -:    9:void analyzeResults(int);
+        -:   10:typedef enum {false = 0, true = 1} boolean;
+        -:   11:int passed = true;
+        -:   12:int result;
+function main called 1 returned 100% blocks executed 87%
+        1:   13:int main(){
+        -:   14:	struct gameState game;
+        -:   15:    int result;
+        1:   16:    int player = 0;
+        1:   17:    int k[10] = {adventurer, council_room, feast, gardens, mine, remodel, smithy, village, baron, great_hall};
+        1:   18:    initializeGame(2, k, 2, &game);
+call    0 returned 100%
+        -:   19:    //set arbirtrary hand/discard/deck sizes
+        1:   20:    game.handCount[player] = 5;
+        1:   21:    game.discardCount[player] = 5;
+        1:   22:    game.deckCount[player] = 5;
+        -:   23:
+        -:   24:    //set first card to be smithy(card we are testing)
+        1:   25:    game.hand[player][0] = smithy;
+        -:   26:
+        -:   27:    //test original state
+        -:   28:    //test hand size
+        1:   29:    result = testAssert(5, game.handCount[player]);
+call    0 returned 100%
+        1:   30:    if(result == false){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   31:        printf("test failed: expected hand size: 5, actual hand size: %d\n", game.handCount[player]);
+call    0 never executed
+        -:   32:    }
+        1:   33:    analyzeResults(result);
+call    0 returned 100%
+        -:   34:    //test discard size
+        1:   35:    result = testAssert(5, game.discardCount[player]);
+call    0 returned 100%
+        1:   36:    if(result == false){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   37:        printf("test failed: expected discard size: 5, actual discard size: %d\n", game.discardCount[player]);
+call    0 never executed
+        -:   38:    }
+        1:   39:    analyzeResults(result);
+call    0 returned 100%
+        -:   40:    //test deck size
+        1:   41:    result = testAssert(5, game.deckCount[player]);
+call    0 returned 100%
+        1:   42:    if(result == false){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   43:        printf("test failed: expected deck size: 5, actual deck size: %d\n", game.deckCount[player]);
+call    0 never executed
+        -:   44:    }
+        1:   45:    analyzeResults(result);
+call    0 returned 100%
+        -:   46:
+        -:   47:    //play the smithy
+        1:   48:    playCard(0,0,0,0,&game);
+call    0 returned 100%
+        -:   49:
+        -:   50:
+        -:   51:    //test game state after smithy NOTE: Smithy should draw 3 cards, and put the smithy into the discard pile
+        -:   52:    //resulting in hand size +2, discard size +1, deck size -3
+        -:   53: 
+        1:   54:    result = testAssert(7, game.handCount[player]);
+call    0 returned 100%
+        1:   55:    if(result == false){
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        1:   56:        printf("test failed: expected hand size: 7, actual hand size: %d\n", game.handCount[player]);
+call    0 returned 100%
+        -:   57:    }
+        1:   58:    analyzeResults(result);
+call    0 returned 100%
+        -:   59:    //test discard size
+        1:   60:    result = testAssert(6, game.discardCount[player]);
+call    0 returned 100%
+        1:   61:    if(result == false){
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        1:   62:        printf("test failed: expected discard size: 6, actual discard size: %d\n", game.discardCount[player]);
+call    0 returned 100%
+        -:   63:    }
+        1:   64:    analyzeResults(result);
+call    0 returned 100%
+        -:   65:    //test deck size
+        1:   66:    result = testAssert(2, game.deckCount[player]);
+call    0 returned 100%
+        1:   67:    if(result == false){
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        1:   68:        printf("test failed: expected deck size: 2, actual deck size: %d\n", game.deckCount[player]);
+call    0 returned 100%
+        -:   69:    }
+        1:   70:    analyzeResults(result);
+call    0 returned 100%
+        -:   71:
+        -:   72:
+        1:   73:	if(passed == true){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   74:        printf("ALL TESTS PASSED\n");
+call    0 never executed
+        -:   75:    }
+        -:   76:    else{
+        1:   77:        printf("TESTS FAILED\n");
+call    0 returned 100%
+        -:   78:    }
+        1:   79:	return 0;
+        -:   80:}
+        -:   81:
+function testAssert called 6 returned 100% blocks executed 100%
+        6:   82:int testAssert(int expected, int actual){
+        6:   83:    return expected == actual;
+        -:   84:}
+        -:   85:
+function analyzeResults called 6 returned 100% blocks executed 100%
+        6:   86:void analyzeResults(int result)
+        -:   87:{
+        6:   88:    if (result == false){
+branch  0 taken 50% (fallthrough)
+branch  1 taken 50%
+        3:   89:        passed = false;
+        -:   90:    }
+        6:   91:}
+        -:   92:
+        -:   93:// for (i = 0; i < 3; i++)
+        -:   94://     {
+        -:   95://       drawCard(currentPlayer, state);
+        -:   96://     }
+        -:   97:
+        -:   98://     //discard card from hand
+        -:   99://     discardCard(handPos, currentPlayer, state, 0);
+        -:  100://     return 0;

@@ -1,0 +1,156 @@
+        -:    0:Source:unittest4.c
+        -:    0:Graph:unittest4.gcno
+        -:    0:Data:unittest4.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include "assert.h"
+        -:    4:#include "dominion.h"
+        -:    5:#include "dominion_helpers.h"
+        -:    6:#include "rngs.h"
+        -:    7:
+        -:    8:int testAssert(int, int);
+        -:    9:typedef enum {false = 0, true = 1} boolean;
+        -:   10:int passed = true;
+        -:   11:
+function main called 1 returned 100% blocks executed 83%
+        1:   12:int main(){
+        -:   13:	
+        -:   14:    int result, i, cost;
+        -:   15:    
+        1:   16:    int expectedValues[27] = {0,2,5,8,0,3,6,6,5,4,4,5,4,4,3,4,3,5,3,5,3,4,2,5,4,4,4};
+        -:   17:
+        -:   18:    //testing cards cost against their expected cost
+       28:   19:    for(i = 0; i < 27; i ++){
+branch  0 taken 96%
+branch  1 taken 4% (fallthrough)
+       27:   20:        cost = getCost(i);
+call    0 returned 100%
+       27:   21:        result = testAssert(expectedValues[i], cost);
+call    0 returned 100%
+       27:   22:        if(result == false){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   23:            passed = false;
+        -:   24:        }
+        -:   25:    }
+        -:   26:   //testing card costs against an "impossible" cost
+       28:   27:   for(i = 0; i < 27; i++){
+branch  0 taken 96%
+branch  1 taken 4% (fallthrough)
+       27:   28:       cost = getCost(i);
+call    0 returned 100%
+       27:   29:       result = testAssert(-1, cost);
+call    0 returned 100%
+       27:   30:       if(result == true){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   31:           passed = false;
+        -:   32:       }
+        -:   33:    }
+        -:   34:
+        -:   35:    //testing getCost against a card that doesn't exist
+        1:   36:    cost = getCost(999);
+call    0 returned 100%
+        1:   37:    result = testAssert(-1, cost);
+call    0 returned 100%
+        1:   38:    if(result == false){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   39:        passed = false;
+        -:   40:    }
+        -:   41:
+        -:   42:
+        1:   43:	if(passed == true){
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        1:   44:        printf("ALL TESTS PASSED\n");
+call    0 returned 100%
+        -:   45:    }
+        -:   46:    else{
+    #####:   47:        printf("TEST FAILED\n");
+call    0 never executed
+        -:   48:    }
+        1:   49:	return 0;
+        -:   50:}
+        -:   51:
+function testAssert called 55 returned 100% blocks executed 100%
+       55:   52:int testAssert(int expected, int actual){
+       55:   53:    return expected == actual;
+        -:   54:}
+        -:   55:
+function analyzeResults called 0 returned 0% blocks executed 0%
+    #####:   56:void analyzeResults(int result)
+        -:   57:{
+    #####:   58:    if (result == false){
+branch  0 never executed
+branch  1 never executed
+    #####:   59:        passed = false;
+        -:   60:    }
+    #####:   61:}
+        -:   62:
+        -:   63:
+        -:   64:
+        -:   65:// int getCost(int cardNumber)
+        -:   66:// {
+        -:   67://   switch (cardNumber)
+        -:   68://   {
+        -:   69://   case curse:
+        -:   70://     return 0;
+        -:   71://   case estate:
+        -:   72://     return 2;
+        -:   73://   case duchy:
+        -:   74://     return 5;
+        -:   75://   case province:
+        -:   76://     return 8;
+        -:   77://   case copper:
+        -:   78://     return 0;
+        -:   79://   case silver:
+        -:   80://     return 3;
+        -:   81://   case gold:
+        -:   82://     return 6;
+        -:   83://   case adventurer:
+        -:   84://     return 6;
+        -:   85://   case council_room:
+        -:   86://     return 5;
+        -:   87://   case feast:
+        -:   88://     return 4;
+        -:   89://   case gardens:
+        -:   90://     return 4;
+        -:   91://   case mine:
+        -:   92://     return 5;
+        -:   93://   case remodel:
+        -:   94://     return 4;
+        -:   95://   case smithy:
+        -:   96://     return 4;
+        -:   97://   case village:
+        -:   98://     return 3;
+        -:   99://   case baron:
+        -:  100://     return 4;
+        -:  101://   case great_hall:
+        -:  102://     return 3;
+        -:  103://   case minion:
+        -:  104://     return 5;
+        -:  105://   case steward:
+        -:  106://     return 3;
+        -:  107://   case tribute:
+        -:  108://     return 5;
+        -:  109://   case ambassador:
+        -:  110://     return 3;
+        -:  111://   case cutpurse:
+        -:  112://     return 4;
+        -:  113://   case embargo:
+        -:  114://     return 2;
+        -:  115://   case outpost:
+        -:  116://     return 5;
+        -:  117://   case salvager:
+        -:  118://     return 4;
+        -:  119://   case sea_hag:
+        -:  120://     return 4;
+        -:  121://   case treasure_map:
+        -:  122://     return 4;
+        -:  123://   }
+        -:  124:
+        -:  125://   return -1;
+        -:  126:// }

@@ -1,0 +1,163 @@
+        -:    0:Source:unittest3.c
+        -:    0:Graph:unittest3.gcno
+        -:    0:Data:unittest3.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include "assert.h"
+        -:    4:#include "dominion.h"
+        -:    5:#include "dominion_helpers.h"
+        -:    6:#include "rngs.h"
+        -:    7:
+        -:    8:int testAssert(int, int);
+        -:    9:void analyzeResults(int);
+        -:   10:typedef enum { false = 0,
+        -:   11:               true = 1 } boolean;
+        -:   12:int MIN_HAND;
+        -:   13:int passed = true;
+        -:   14:
+function main called 1 returned 100% blocks executed 97%
+        1:   15:int main()
+        -:   16:{
+        -:   17:    struct gameState game;
+        1:   18:    int player = 0;
+        -:   19:    
+        -:   20:    int result, i;
+        1:   21:    int k[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        1:   22:    int pointCards[6] = {curse, estate, duchy, province, great_hall, gardens};
+        1:   23:    initializeGame(2, k, 2, &game);
+call    0 returned 100%
+        -:   24:
+        -:   25:    
+        -:   26:    //testing score from hand - setting hand size to 5, setting hand to "value" cards - discard and deck to "no-value" cards
+        1:   27:    game.handCount[player] = 6;
+        1:   28:    game.discardCount[player] = 6;
+        1:   29:    game.deckCount[player] = 6;
+        7:   30:    for(i = 0; i < game.handCount[player]; i++)
+branch  0 taken 86%
+branch  1 taken 14% (fallthrough)
+        -:   31:    {
+        6:   32:      game.hand[player][i] = estate;
+        6:   33:      game.discard[player][i] = smithy;
+        6:   34:      game.deck[player][i] = smithy;
+        -:   35:    }
+        -:   36:
+        1:   37:    int score = scoreFor(player,&game);
+call    0 returned 100%
+        1:   38:    result = testAssert(6, score);
+call    0 returned 100%
+        1:   39:    analyzeResults(result);
+call    0 returned 100%
+        -:   40:
+        -:   41:    //testing score from discard - discard filled with "value" cards - deck and hand set to "no-value" cards
+        7:   42:    for(i = 0; i < game.discardCount[player]; i++)
+branch  0 taken 86%
+branch  1 taken 14% (fallthrough)
+        -:   43:    {
+        6:   44:      game.hand[player][i] = smithy;
+        6:   45:      game.discard[player][i] = estate;
+        6:   46:      game.deck[player][i] = smithy;
+        -:   47:    }
+        1:   48:    score = scoreFor(player,&game);
+call    0 returned 100%
+        1:   49:    result = testAssert(6, score);
+call    0 returned 100%
+        1:   50:    analyzeResults(result);
+call    0 returned 100%
+        -:   51:
+        -:   52:    //testing score from deck - deck filled with "value" cards - hand and discard filled with "no-value" cards
+        7:   53:    for(i = 0; i < game.deckCount[player]; i++)
+branch  0 taken 86%
+branch  1 taken 14% (fallthrough)
+        -:   54:    {
+        6:   55:      game.hand[player][i] = smithy;
+        6:   56:      game.discard[player][i] = smithy;
+        6:   57:      game.deck[player][i] = estate;
+        -:   58:    }
+        1:   59:    score = scoreFor(player,&game);
+call    0 returned 100%
+        1:   60:    result = testAssert(6, score);
+call    0 returned 100%
+        1:   61:    analyzeResults(result);
+call    0 returned 100%
+        -:   62:
+        -:   63:    //testing values of all "score cards"
+        -:   64:
+        7:   65:    for(i = 0; i < game.deckCount[player]; i++)
+branch  0 taken 86%
+branch  1 taken 14% (fallthrough)
+        -:   66:    {
+        6:   67:        game.hand[player][i] = pointCards[i];
+        6:   68:        game.discard[player][i] = pointCards[i];
+        6:   69:        game.deck[player][i] = pointCards[i];
+        -:   70:        
+        -:   71:        
+        -:   72:        
+        -:   73:    }
+        -:   74:
+        1:   75:    score = scoreFor(player,&game);
+call    0 returned 100%
+        1:   76:    result = testAssert(31, score);
+call    0 returned 100%
+        1:   77:    analyzeResults(result);
+call    0 returned 100%
+        -:   78:
+        -:   79:
+        -:   80:    //testing my own curiosity
+        1:   81:    game.handCount[player] = 100;
+        1:   82:    game.discardCount[player] = 100;
+        1:   83:    game.deckCount[player] = 100;
+      101:   84:    for(i = 0; i < game.deckCount[player]; i++)
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+        -:   85:    {
+      100:   86:      game.hand[player][i] = gardens;
+      100:   87:      game.discard[player][i] = gardens;
+      100:   88:      game.deck[player][i] = gardens;
+        -:   89:    }
+        1:   90:    score = scoreFor(player,&game);
+call    0 returned 100%
+        1:   91:    result = testAssert(100, score);
+call    0 returned 100%
+        1:   92:    analyzeResults(result);
+call    0 returned 100%
+        -:   93:
+        1:   94:    if (passed == true)
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+        -:   95:    {
+    #####:   96:        printf("Tests passed\n");
+call    0 never executed
+        -:   97:    }
+        -:   98:    else
+        -:   99:    {
+        1:  100:        printf("Tests failed\n");
+call    0 returned 100%
+        -:  101:    }
+        -:  102:    
+        -:  103:
+        1:  104:    return 0;
+        -:  105:}
+        -:  106:
+function testAssert called 5 returned 100% blocks executed 100%
+        5:  107:int testAssert(int expected, int actual)
+        -:  108:{
+        5:  109:    if(expected != actual){
+branch  0 taken 40% (fallthrough)
+branch  1 taken 60%
+        2:  110:        printf("Assertion failed: expected: %d != calculated: %d\n", expected, actual);
+call    0 returned 100%
+        -:  111:    }
+        5:  112:    return expected == actual;
+        -:  113:}
+        -:  114:
+function analyzeResults called 5 returned 100% blocks executed 100%
+        5:  115:void analyzeResults(int result)
+        -:  116:{
+        5:  117:    if (result == false){
+branch  0 taken 40% (fallthrough)
+branch  1 taken 60%
+        2:  118:        passed = false;
+        -:  119:    }
+        5:  120:}

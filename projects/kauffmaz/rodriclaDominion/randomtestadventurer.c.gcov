@@ -1,0 +1,173 @@
+        -:    0:Source:randomtestadventurer.c
+        -:    0:Graph:randomtestadventurer.gcno
+        -:    0:Data:randomtestadventurer.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include "dominion.h"
+        -:    2:#include "interface.h"
+        -:    3:#include "dominion_helpers.h"
+        -:    4:#include "rngs.h"
+        -:    5:#include <stdio.h>
+        -:    6:#include <math.h>
+        -:    7:#include <time.h>
+        -:    8:#include <stdlib.h>
+        -:    9:#include <assert.h>
+        -:   10:
+        -:   11:#define NUM_TESTS 1500
+        -:   12:typedef enum {false = 0, true = 1} boolean;
+        -:   13:typedef struct gameState gameState;
+        -:   14:int advenPos(int p, struct gameState *g);
+        -:   15:
+function main called 1 returned 100% blocks executed 81%
+        1:   16:int main()
+        -:   17:{
+        -:   18:    int passedTests, failedTests;
+        1:   19:    int cards[10] = {minion, mine, cutpurse, sea_hag, tribute, smithy, adventurer, gardens, embargo, village};
+        -:   20:    int i, j, player, players, handCount, randomSeed, treasureCount, count;
+        -:   21:    
+        -:   22:
+        1:   23:    srand(time(NULL));
+call    0 returned 100%
+call    1 returned 100%
+        -:   24:
+        -:   25:    gameState state;
+        -:   26:
+        1:   27:    passedTests = 0;
+        1:   28:    failedTests = 0;
+        1:   29:    count = 0;
+        1:   30:    player = 0;
+        1:   31:    printf("\n ***ADVENTURER TEST*** \n");
+call    0 returned 100%
+        -:   32:
+     1501:   33:    for (i = 0; i < NUM_TESTS; i++)
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+        -:   34:    {
+     1500:   35:        printf("Test #%d\n", i);
+call    0 returned 100%
+     1500:   36:        count++;
+     1500:   37:        randomSeed = rand() % 50 + 1;
+call    0 returned 100%
+     1500:   38:        players = rand() % 4 + 1;
+call    0 returned 100%
+     1500:   39:        int actualTreasure = 0;
+     1500:   40:        int currentPlayer = state.whoseTurn;
+     1500:   41:        int failure = 0;
+        -:   42:
+        -:   43:        
+     1500:   44:            initializeGame(players, cards, randomSeed, &state); // init the game
+call    0 returned 100%
+     5221:   45:            for (j = 0; j < players; j++)
+branch  0 taken 71%
+branch  1 taken 29% (fallthrough)
+        -:   46:            {
+        -:   47:                // loop through each player and give them random values
+     3721:   48:                state.handCount[j] = rand() % MAX_HAND;
+call    0 returned 100%
+     3721:   49:                state.deckCount[j] = rand() % MAX_DECK;
+call    0 returned 100%
+     3721:   50:                state.discardCount[j] = rand() % MAX_DECK;
+call    0 returned 100%
+        -:   51:            }
+        -:   52:            int k;
+   370855:   53:            for (k = 0; k <state.deckCount[0]; k++) {
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+   369355:   54:                state.deck[1][k] = rand() % 25;
+call    0 returned 100%
+        -:   55:            }
+   374743:   56:            for (k = 0; k <state.discardCount[0]; k++) {
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+   373243:   57:                state.discard[1][k] = rand() % 25;
+call    0 returned 100%
+        -:   58:            }
+   375584:   59:            for (k = 0; k <state.handCount[0]; k++) {
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+   374084:   60:                state.hand[1][k] = rand() % 25;
+call    0 returned 100%
+        -:   61:            }
+        -:   62:            //state.whoseTurn = player; 
+        -:   63:            // deckCountPre = state.deckCount[player];
+        -:   64:            // discardCountPre = state.discardCount[player]; // preserve discarded card value
+     1500:   65:            treasureCount = countHandCoins(player, &state);
+call    0 returned 100%
+        -:   66:            // get the original hand count
+     1500:   67:            handCount = numHandCards(&state);
+call    0 returned 100%
+        -:   68:            // play the adventurer
+        -:   69:            //testAdventurer(player, &state);
+        -:   70:            
+     1500:   71:            int advenloc = advenPos(player, &state);
+call    0 returned 100%
+        -:   72:        //check if smithy is in the hand and if it is - play it
+     1500:   73:        if (advenloc != -1){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   74:            playCard(advenloc,0,0,0,&state);
+call    0 never executed
+        -:   75:        } else {
+     1500:   76:            printf("ERROR: hand does not contain adventurer\n");
+call    0 returned 100%
+     1500:   77:            failedTests += 1;
+     1500:   78:            continue;
+        -:   79:        }
+        -:   80:            
+        -:   81:    {
+        -:   82:        // check if player drew 2 cards
+    #####:   83:        if (handCount + 2 != state.handCount[currentPlayer])
+branch  0 never executed
+branch  1 never executed
+        -:   84:        {
+    #####:   85:            failure = true;
+    #####:   86:            printf("FAILED TEST (hand count) EXPECTED: %d ACTUAL: %d\n",handCount + 2, state.handCount[currentPlayer]);
+call    0 never executed
+        -:   87:        }
+        -:   88:        // do some math check if the discard count is correct
+    #####:   89:        actualTreasure = countHandCoins(state.whoseTurn, &state);
+call    0 never executed
+    #####:   90:        if (treasureCount != actualTreasure)
+branch  0 never executed
+branch  1 never executed
+        -:   91:        {
+    #####:   92:            failure = true;
+    #####:   93:            printf("FAILED TEST (treasure count) EXPECTED: %d ACTUAL: %d\n",treasureCount, actualTreasure);
+call    0 never executed
+        -:   94:        }
+        -:   95:
+    #####:   96:        if (failure == true)
+branch  0 never executed
+branch  1 never executed
+        -:   97:        {
+    #####:   98:            failedTests += 1;
+        -:   99:        }
+        -:  100:        else
+        -:  101:        {
+    #####:  102:            passedTests += 1;
+        -:  103:        }
+        -:  104:    }
+        -:  105:        }
+        -:  106:
+        1:  107:    printf("\n *** TEST RESULTS *** \n");
+call    0 returned 100%
+        1:  108:    printf("Tests passed: %d\n", passedTests);
+call    0 returned 100%
+        1:  109:    printf("Tests failed: %d\n", failedTests);
+call    0 returned 100%
+        1:  110:    return 0;
+        -:  111:}
+        -:  112:
+function advenPos called 1500 returned 100% blocks executed 86%
+     1500:  113:int advenPos(int p, struct gameState *g) {
+        -:  114:    int i;
+   375584:  115:    for (i = 0; i < g->handCount[p]; i++) {
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+   374084:  116:        if (g->hand[p][i] == adventurer)
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:  117:            return i;
+        -:  118:    }
+     1500:  119:    return -1;
+        -:  120:}

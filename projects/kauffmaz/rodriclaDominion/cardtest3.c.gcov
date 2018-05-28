@@ -1,0 +1,137 @@
+        -:    0:Source:cardtest3.c
+        -:    0:Graph:cardtest3.gcno
+        -:    0:Data:cardtest3.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include "assert.h"
+        -:    4:#include "dominion.h"
+        -:    5:#include "dominion_helpers.h"
+        -:    6:#include "rngs.h"
+        -:    7:
+        -:    8:int testAssert(int, int);
+        -:    9:void analyzeResults(int);
+        -:   10:typedef enum {false = 0, true = 1} boolean;
+        -:   11:int passed = true;
+        -:   12:int result;
+function main called 1 returned 100% blocks executed 78%
+        1:   13:int main(){
+        -:   14:	struct gameState game;
+        -:   15:    int result, i;
+        1:   16:    int player = 0;
+        1:   17:    int player2 = 1;
+        1:   18:    int k[10] = {adventurer, council_room, feast, gardens, mine, remodel, smithy, village, baron, great_hall};
+        1:   19:    initializeGame(2, k, 2, &game);
+call    0 returned 100%
+        -:   20:    //set arbirtrary hand/discard/deck sizes
+        1:   21:    game.handCount[player] = 5;
+        1:   22:    game.discardCount[player] = 5;
+        1:   23:    game.deckCount[player] = 5;
+        1:   24:    game.handCount[player2] = 5;
+        1:   25:    game.discardCount[player2] = 5;
+        1:   26:    game.deckCount[player2] = 5;
+        -:   27:    
+        -:   28:    //set hand to 4 coins and 1 cutpurse for each player
+        6:   29:    for(i = 0; i < game.handCount[player]; i++){
+branch  0 taken 83%
+branch  1 taken 17% (fallthrough)
+        5:   30:        game.hand[player][i] = silver;
+        -:   31:    }
+        6:   32:    for(i = 0; i < game.handCount[player2]; i++){
+branch  0 taken 83%
+branch  1 taken 17% (fallthrough)
+        5:   33:        game.hand[player2][i] = copper;
+        -:   34:    }
+        1:   35:    game.hand[player][0] = cutpurse;
+        1:   36:    game.hand[player2][0] = cutpurse;
+        -:   37:
+        -:   38:    //check original game state NOTE: player 1 should have 8 coins, player 2 should have 4 coins
+        1:   39:    updateCoins(player, &game, 0);
+call    0 returned 100%
+        1:   40:    result = testAssert(8, game.coins);
+call    0 returned 100%
+        1:   41:    if(result == false){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   42:        printf("TEST FAILED: expected coins = 8, actual coins = %d\n", game.coins);
+call    0 never executed
+    #####:   43:        passed = false;
+        -:   44:    }
+        1:   45:    updateCoins(player2, &game, 0);
+call    0 returned 100%
+        1:   46:    result = testAssert(4, game.coins);
+call    0 returned 100%
+        1:   47:    if(result == false){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   48:        printf("TEST FAILED: expected coins = 4, actual coins = %d\n", game.coins);
+call    0 never executed
+    #####:   49:        passed = false;
+        -:   50:    }
+        -:   51:
+        -:   52:    //player 1 plays cutpurse
+        1:   53:    playCard(0,0,0,0,&game);
+call    0 returned 100%
+        -:   54:
+        -:   55:    //player1 should have 10 coins
+        1:   56:    result = testAssert(10, game.coins);
+call    0 returned 100%
+        1:   57:    if(result == false){
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        1:   58:        printf("TEST FAILED: expected coins = 10, actual coins = %d\n", game.coins);
+call    0 returned 100%
+        1:   59:        passed = false;
+        -:   60:    }
+        -:   61:    //player 2 should have 3 coins (1 discarded)
+        1:   62:    updateCoins(player2, &game, 0);
+call    0 returned 100%
+        1:   63:    result = testAssert(3, game.coins);
+call    0 returned 100%
+        1:   64:    if(result == false){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   65:        printf("TEST FAILED: expected coins = 3, actual coins = %d\n", game.coins);
+call    0 never executed
+    #####:   66:        passed = false;
+        -:   67:    }
+        -:   68:
+        -:   69:    //update player 2 to have no copper to discard
+        5:   70:    for(i = 0; i < game.handCount[player2]; i++){
+branch  0 taken 80%
+branch  1 taken 20% (fallthrough)
+        4:   71:        game.hand[player2][i] = smithy;
+        -:   72:    }
+        -:   73:    
+        1:   74:    updateCoins(player2, &game, 0);
+call    0 returned 100%
+        1:   75:    result = testAssert(0, game.coins);
+call    0 returned 100%
+        1:   76:    if(result == false){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   77:        printf("TEST FAILED: expected coins = 0, actual coins = %d\n", game.coins);
+call    0 never executed
+    #####:   78:        passed = false;
+        -:   79:    }
+        -:   80:
+        -:   81:
+        1:   82:	if(passed == true){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   83:        printf("ALL TESTS PASSED\n");
+call    0 never executed
+        -:   84:    }
+        -:   85:    else{
+        1:   86:        printf("TEST FAILED\n");
+call    0 returned 100%
+        -:   87:    }
+        1:   88:	return 0;
+        -:   89:}
+        -:   90:
+function testAssert called 5 returned 100% blocks executed 100%
+        5:   91:int testAssert(int expected, int actual){
+        5:   92:    return expected == actual;
+        -:   93:}
+        -:   94:

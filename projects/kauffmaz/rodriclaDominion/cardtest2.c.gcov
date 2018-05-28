@@ -1,0 +1,142 @@
+        -:    0:Source:cardtest2.c
+        -:    0:Graph:cardtest2.gcno
+        -:    0:Data:cardtest2.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include "assert.h"
+        -:    4:#include "dominion.h"
+        -:    5:#include "dominion_helpers.h"
+        -:    6:#include "rngs.h"
+        -:    7:
+        -:    8:int testAssert(int, int);
+        -:    9:void analyzeResults(int);
+        -:   10:typedef enum {false = 0, true = 1} boolean;
+        -:   11:int passed = true;
+        -:   12:int result;
+        -:   13:int totalDeckSize = 0;
+        -:   14:int totalMinusHand = 0;
+        -:   15:int expectedDeckDiscard = 0;
+function main called 1 returned 100% blocks executed 83%
+        1:   16:int main(){
+        -:   17:	struct gameState game;
+        -:   18:    int result, i;
+        1:   19:    int player = 0;
+        1:   20:    int k[10] = {adventurer, council_room, feast, gardens, mine, remodel, smithy, village, baron, great_hall};
+        1:   21:    initializeGame(2, k, 2, &game);
+call    0 returned 100%
+        -:   22:    //set arbirtrary hand/discard/deck sizes
+        1:   23:    game.handCount[player] = 5;
+        1:   24:    game.discardCount[player] = 5;
+        1:   25:    game.deckCount[player] = 5;
+        -:   26:    
+        -:   27:    
+        -:   28:    //set first card to be adventurer(card we are testing)
+        6:   29:    for(i = 0; i < game.handCount[player]; i++){
+branch  0 taken 83%
+branch  1 taken 17% (fallthrough)
+        5:   30:        game.hand[player][i] = copper;
+        5:   31:        game.discard[player][i] = copper;
+        5:   32:        game.deck[player][i] = copper;
+        -:   33:    }
+        -:   34:
+        -:   35:    // //filling deck with junk
+        -:   36:    // for(i = 0; i < game.deckCount[player]; i++){
+        -:   37:    //     game.deck[player][i] = smithy;
+        -:   38:    // }
+        -:   39:
+        1:   40:    game.hand[player][0] = adventurer;
+        -:   41:
+        -:   42:    //test original state
+        1:   43:    result = testAssert(5, game.handCount[player]);
+call    0 returned 100%
+        1:   44:    if(result == false){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   45:        printf("test failed: expected hand size: 5, actual hand size: %d\n", game.handCount[player]);
+call    0 never executed
+        -:   46:    }
+        1:   47:    analyzeResults(result);
+call    0 returned 100%
+        -:   48:    //test discard size
+        1:   49:    result = testAssert(5, game.discardCount[player]);
+call    0 returned 100%
+        1:   50:    if(result == false){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   51:        printf("test failed: expected discard size: 5, actual discard size: %d\n", game.discardCount[player]);
+call    0 never executed
+        -:   52:    }
+        1:   53:    analyzeResults(result);
+call    0 returned 100%
+        -:   54:    //test deck size
+        1:   55:    result = testAssert(5, game.deckCount[player]);
+call    0 returned 100%
+        1:   56:    if(result == false){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   57:        printf("test failed: expected deck size: 5, actual deck size: %d\n", game.deckCount[player]);
+call    0 never executed
+        -:   58:    }
+        1:   59:    analyzeResults(result);
+call    0 returned 100%
+        -:   60:
+        -:   61:    //play the adventurer NOTE: Should draw 2 treasures so hand size should go up by 1 and deck size + discard size should remain the same
+        1:   62:    playCard(0,0,0,0,&game);
+call    0 returned 100%
+        -:   63:
+        -:   64:
+        -:   65:    //testing hand size after adventurer. Should be +1 total
+        1:   66:    result = testAssert(6, game.handCount[player]);
+call    0 returned 100%
+        1:   67:    if(result == false){
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        1:   68:        printf("test failed: expected hand size: 6, actual hand size: %d\n", game.handCount[player]);
+call    0 returned 100%
+        -:   69:    }
+        1:   70:    analyzeResults(result);
+call    0 returned 100%
+        -:   71:   
+        -:   72:   //testing deck/discard size. varies on how many draws it takes to draw 2 treasures but deck + discard should == total cards - size of hand
+        1:   73:    totalDeckSize = game.deckCount[player] + game.discardCount[player] + game.handCount[player];
+        1:   74:    totalMinusHand = totalDeckSize - game.handCount[player];
+        1:   75:    expectedDeckDiscard = game.discardCount[player] + game.deckCount[player];
+        -:   76:
+        1:   77:    result = testAssert(totalMinusHand, expectedDeckDiscard);
+call    0 returned 100%
+        1:   78:    if(result == false){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   79:        printf("test failed: expected deck + discard: %d, actual = %d", totalMinusHand, expectedDeckDiscard);
+call    0 never executed
+        -:   80:    }
+        -:   81:
+        1:   82:	if(passed == true){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   83:        printf("ALL TESTS PASSED\n");
+call    0 never executed
+        -:   84:    }
+        -:   85:    else{
+        1:   86:        printf("TEST FAILED\n");
+call    0 returned 100%
+        -:   87:    }
+        1:   88:	return 0;
+        -:   89:}
+        -:   90:
+function testAssert called 5 returned 100% blocks executed 100%
+        5:   91:int testAssert(int expected, int actual){
+        5:   92:    return expected == actual;
+        -:   93:}
+        -:   94:
+function analyzeResults called 4 returned 100% blocks executed 100%
+        4:   95:void analyzeResults(int result)
+        -:   96:{
+        4:   97:    if (result == false){
+branch  0 taken 25% (fallthrough)
+branch  1 taken 75%
+        1:   98:        passed = false;
+        -:   99:    }
+        4:  100:}

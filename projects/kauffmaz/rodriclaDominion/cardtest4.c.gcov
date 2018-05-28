@@ -1,0 +1,109 @@
+        -:    0:Source:cardtest4.c
+        -:    0:Graph:cardtest4.gcno
+        -:    0:Data:cardtest4.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include <stdio.h>
+        -:    2:#include <stdlib.h>
+        -:    3:#include "assert.h"
+        -:    4:#include "dominion.h"
+        -:    5:#include "dominion_helpers.h"
+        -:    6:#include "rngs.h"
+        -:    7:
+        -:    8:int testAssert(int, int);
+        -:    9:void analyzeResults(int);
+        -:   10:typedef enum {false = 0, true = 1} boolean;
+        -:   11:int passed = true;
+        -:   12:int result;
+function main called 1 returned 100% blocks executed 69%
+        1:   13:int main(){
+        -:   14:	struct gameState game;
+        -:   15:    int result, i;
+        1:   16:    int player = 0;
+        1:   17:    int k[10] = {adventurer, council_room, feast, gardens, mine, remodel, smithy, village, baron, great_hall};
+        1:   18:    initializeGame(2, k, 2, &game);
+call    0 returned 100%
+        -:   19:    //set arbirtrary hand/discard/deck sizes
+        1:   20:    game.handCount[player] = 5;
+        1:   21:    game.discardCount[player] = 5;
+        1:   22:    game.deckCount[player] = 5;
+        -:   23:    
+        -:   24:    //fill hand with arbitrary cards + 1 great_hall
+        6:   25:    for(i = 0; i < game.handCount[player]; i++){
+branch  0 taken 83%
+branch  1 taken 17% (fallthrough)
+        5:   26:       if(i == 0){
+branch  0 taken 20% (fallthrough)
+branch  1 taken 80%
+        1:   27:            game.hand[player][i] = great_hall;
+        -:   28:       }
+        -:   29:       else{
+        4:   30:            game.hand[player][i] = copper;
+        -:   31:       }   
+        -:   32:    }
+        -:   33:    
+        -:   34:    //test original hand size (should be 5)
+        1:   35:    result = testAssert(5, game.handCount[player]);
+call    0 returned 100%
+        1:   36:    if (result == false){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   37:        printf("TEST FAILED: expected hand size = 5, actual hand size = %d\n", game.handCount[player]);
+call    0 never executed
+    #####:   38:        passed = false;
+        -:   39:    }
+        -:   40:    //test original action count (should be 1)
+        1:   41:    result = testAssert(1, game.numActions);
+call    0 returned 100%
+        1:   42:    if (result == false){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   43:        printf("TEST FAILED: expected actions = 1, actual actions = %d", game.numActions);
+call    0 never executed
+    #####:   44:        passed = false;
+        -:   45:    }
+        -:   46:
+        -:   47:    //play the great_hall NOTE: great hall basically replaces itself - you spend your action and card to get another action and another card
+        -:   48:    //so hand and actions should still be 5/1
+        1:   49:    playCard(0,0,0,0,&game);
+call    0 returned 100%
+        -:   50:
+        -:   51:    //test handsize after great hall played (should be 5)
+        1:   52:    result = testAssert(5, game.handCount[player]);
+call    0 returned 100%
+        1:   53:    if (result == false){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   54:        printf("TEST FAILED: expected hand size = 5, actual hand size = %d\n", game.handCount[player]);
+call    0 never executed
+    #####:   55:        passed = false;
+        -:   56:    }
+        -:   57:    //test action count after great hall played (should be 1)
+        1:   58:    result = testAssert(1, game.numActions);
+call    0 returned 100%
+        1:   59:    if (result == false){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   60:        printf("TEST FAILED: expected actions = 1, actual actions = %d\n", game.numActions);
+call    0 never executed
+    #####:   61:        passed = false;
+        -:   62:    }
+        -:   63:    
+        -:   64:
+        1:   65:	if(passed == true){
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        1:   66:        printf("ALL TESTS PASSED\n");
+call    0 returned 100%
+        -:   67:    }
+        -:   68:    else{
+    #####:   69:        printf("TEST FAILED\n");
+call    0 never executed
+        -:   70:    }
+        1:   71:	return 0;
+        -:   72:}
+        -:   73:
+function testAssert called 4 returned 100% blocks executed 100%
+        4:   74:int testAssert(int expected, int actual){
+        4:   75:    return expected == actual;
+        -:   76:}

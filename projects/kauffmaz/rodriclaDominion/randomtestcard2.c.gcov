@@ -1,0 +1,168 @@
+        -:    0:Source:randomtestcard2.c
+        -:    0:Graph:randomtestcard2.gcno
+        -:    0:Data:randomtestcard2.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include "dominion.h"
+        -:    2:#include "interface.h"
+        -:    3:#include "dominion_helpers.h"
+        -:    4:#include "rngs.h"
+        -:    5:#include <stdio.h>
+        -:    6:#include <math.h>
+        -:    7:#include <time.h>
+        -:    8:#include <stdlib.h>
+        -:    9:#include <assert.h>
+        -:   10:#include <string.h>
+        -:   11:
+        -:   12:#define NUM_TESTS 5000
+        -:   13:int greathallPos(int p, struct gameState *g);
+        -:   14:typedef enum {false = 0, true = 1} boolean;
+        -:   15:typedef struct gameState gameState;
+        -:   16:
+function main called 1 returned 100% blocks executed 93%
+        1:   17:int main()
+        -:   18:{
+        -:   19:    int passedTests, failedTests;
+        1:   20:    int cards[10] = {minion, mine, cutpurse, sea_hag, tribute, smithy, adventurer, gardens, embargo, village};
+        -:   21:    int i, player, players, randomSeed, count;
+        -:   22:    
+        -:   23:
+        1:   24:    srand(time(NULL));
+call    0 returned 100%
+call    1 returned 100%
+        -:   25:
+        -:   26:    gameState startState;
+        -:   27:    gameState endState;
+        1:   28:    passedTests = 0;
+        1:   29:    failedTests = 0;
+        1:   30:    count = 0;
+        -:   31:
+        1:   32:    printf("\n ***Great Hall TEST*** \n");
+call    0 returned 100%
+        -:   33:
+     5001:   34:    for (i = 0; i < NUM_TESTS; i++)
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+        -:   35:    {
+     5000:   36:        printf("Test #%d\n", i+1);
+call    0 returned 100%
+     5000:   37:        count++;
+     5000:   38:        randomSeed = rand() % 50 + 1;
+call    0 returned 100%
+     5000:   39:        players = rand() % 4 + 1;
+call    0 returned 100%
+     5000:   40:        int failure = false;
+     5000:   41:        player = 1;
+        -:   42:        
+     5000:   43:        initializeGame(players, cards, randomSeed, &startState); 
+call    0 returned 100%
+        -:   44:            
+        -:   45:        //randomize the hand/deck/discard piles
+     5000:   46:        startState.handCount[1] = rand() % MAX_HAND;
+call    0 returned 100%
+     5000:   47:        startState.deckCount[1] = rand() % MAX_DECK;
+call    0 returned 100%
+     5000:   48:        startState.discardCount[1] = rand() % MAX_DECK;
+call    0 returned 100%
+        -:   49:        int k;
+  1246753:   50:        for (k = 0; k <startState.deckCount[1]; k++) {
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+  1241753:   51:            startState.deck[1][k] = rand() % 25;
+call    0 returned 100%
+        -:   52:        }
+  1242542:   53:        for (k = 0; k <startState.discardCount[1]; k++) {
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+  1237542:   54:            startState.discard[1][k] = rand() % 25;
+call    0 returned 100%
+        -:   55:        }
+  1280658:   56:        for (k = 0; k <startState.handCount[1]; k++) {
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+  1275658:   57:            startState.hand[1][k] = rand() % 25;
+call    0 returned 100%
+        -:   58:        }
+        -:   59:
+     5000:   60:        startState.whoseTurn = player; 
+        -:   61:        
+        -:   62:        //save a copy of the state to compare
+     5000:   63:        memcpy(&endState, &startState, sizeof(struct gameState));
+        -:   64:        
+     5000:   65:        int greatHallLoc = greathallPos(player, &startState);
+call    0 returned 100%
+        -:   66:        //check if great hall is in the hand
+     5000:   67:        if (greatHallLoc != -1){
+branch  0 taken 95% (fallthrough)
+branch  1 taken 5%
+     4766:   68:            playCard(greatHallLoc,0,0,0,&endState);
+call    0 returned 100%
+        -:   69:        } else {
+      234:   70:            printf("ERROR: hand does not contain great hall\n");
+call    0 returned 100%
+      234:   71:            failedTests += 1;
+      234:   72:            continue;
+        -:   73:        }
+        -:   74:        
+        -:   75:        
+        -:   76:        
+        -:   77:    {
+        -:   78:        // Hand size should stay the same (+1 card and discard great hall)
+     4766:   79:        if (startState.handCount[player] != endState.handCount[player])
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+        -:   80:        {
+    #####:   81:            failure = true;
+    #####:   82:            printf("FAILED TEST (hand count) EXPECTED: %d ACTUAL: %d\n",startState.handCount[player], endState.handCount[player]);
+call    0 never executed
+        -:   83:        }
+        -:   84:       // Discard deck should increase by 1 (great hall discarded)
+     4766:   85:       if(startState.discardCount[player] + 1 != endState.discardCount[player]){
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+     4766:   86:           failure = true;
+     4766:   87:           printf("FAILED TEST (discard count) EXPECTED: %d ACTUAL: %d\n",startState.discardCount[player] + 1, endState.discardCount[player]);
+call    0 returned 100%
+        -:   88:       }
+     4766:   89:        if(startState.numActions != endState.numActions){
+branch  0 taken 0% (fallthrough)
+branch  1 taken 100%
+    #####:   90:           failure = true;
+    #####:   91:           printf("FAILED TEST (action count) EXPECTED: %d ACTUAL: %d\n",startState.numActions, endState.numActions);
+call    0 never executed
+        -:   92:        }
+     4766:   93:        if (failure == true)
+branch  0 taken 100% (fallthrough)
+branch  1 taken 0%
+        -:   94:        {
+     4766:   95:            failedTests += 1;
+        -:   96:        }
+        -:   97:        else
+        -:   98:        {
+    #####:   99:            passedTests += 1;
+        -:  100:        }
+        -:  101:    }
+        -:  102:        }
+        -:  103:
+        1:  104:    printf("\n *** TEST RESULTS *** \n");
+call    0 returned 100%
+        1:  105:    printf("Tests passed: %d\n", passedTests);
+call    0 returned 100%
+        1:  106:    printf("Tests failed: %d\n", failedTests);
+call    0 returned 100%
+        1:  107:    return 0;
+        -:  108:}
+        -:  109:
+function greathallPos called 5000 returned 100% blocks executed 100%
+     5000:  110:int greathallPos(int p, struct gameState *g) {
+        -:  111:	int i;
+   123087:  112:	for (i = 0; i < g->handCount[p]; i++) {
+branch  0 taken 99%
+branch  1 taken 1% (fallthrough)
+   122853:  113:		if (g->hand[p][i] == great_hall)
+branch  0 taken 4% (fallthrough)
+branch  1 taken 96%
+     4766:  114:			return i;
+        -:  115:	}
+      234:  116:	return -1;
+        -:  117:}
